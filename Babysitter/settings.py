@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pipeline',
+    'web'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,6 +62,22 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'dev': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'sitter_dev',
+        'USER': 'sitter_user',
+        'PASSWORD': 'sitting',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    },
+    'prod': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'sitter_prod',
+        'USER': 'sitter_user',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -79,5 +97,63 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'web/static/build/')
 STATIC_URL = '/static/'
+
+
+#####-----< Django Pipeline >-----#####
+PIPELINE_JS = {
+    'core': {
+        'source_filenames': (
+            'files/js/vendor/jquery.js',
+            'files/js/vendor/jquery.easing.min.js',
+            'files/js/vendor/bootstrap.js',
+            'files/js/vendor/underscore-min.js',
+            'files/js/vendor/backbone-min.js',
+        ),
+        'output_filename': 'build/core.js'
+    },
+    'index': {
+        'source_filenames': (
+            'files/js/app/index.js',
+        ),
+        'output_filename': 'build/index.js'
+    }
+}
+
+PIPELINE_CSS = {
+    'core': {
+        'source_filenames': (
+            'files/css/vendor/bootstrap.css',
+            'files/css/vendor/font-awesome/css/font-awesome.min.css',
+            'files/css/app/core.less',
+        ),
+        'output_filename': 'build/core.css'
+    },
+    'index': {
+        'source_filenames': (
+            'files/css/app/index.less',
+        ),
+        'output_filename': 'build/index.css'
+    }
+}
+
+PIPELINE_COMPILERS = (
+    'pipeline.compilers.less.LessCompiler',
+)
+PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
+PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+
+#####-----< Switches >-----#####
+if DEBUG:
+    DATABASES['default'] = DATABASES['dev']
+else:
+    DATABASES['default'] = DATABASES['prod']

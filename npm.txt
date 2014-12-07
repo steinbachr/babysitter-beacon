@@ -1,0 +1,2 @@
+npm -g install lessc
+npm -g install yuglify

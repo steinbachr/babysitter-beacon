@@ -1,0 +1,18 @@
+{% load pipeline %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{% block title %}{% endblock %}</title>
+    {% stylesheet 'core' %}
+    {% block css %}{% endblock %}
+    {% javascript 'core' %}
+</head>
+{% block body %}{% endblock %}
+{% block js %}{% endblock %}
+</html>
