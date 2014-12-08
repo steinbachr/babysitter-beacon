@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load pipeline %}
+
+{% block meta %}
+    <title>SitterBeacon for {{ type }}</title>
+{% endblock %}
+
+{% block css %}
+    {% stylesheet 'signup' %}
+{% endblock %}
+
+{% block body %}
+<body>
+    <div class="container">
+        <h2>{{ type }} Signup/Login</h2>
+        <div class="signup-container col-md-6">
+            <h4>Signup</h4>
+            <form role="form" method="post">{% csrf_token %}
+                {% for field in signup_form %}
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                    </div>
+                {% endfor %}
+                <input type="submit" class="btn btn-primary" value="Signup" />
+                {% if signup_form.errors %}{{ signup_form.errors }}{% endif %}
+            </form>
+        </div>
+        <div class="login-container col-md-3">
+            <h4>Login</h4>
+            <form role="form" method="post">{% csrf_token %}
+                {% for field in login_form %}
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                    </div>
+                {% endfor %}
+                {% if login_form.non_field_errors %}{{ login_form.non_field_errors }}{% endif %}
+                <input type="submit" class="btn btn-primary" value="Login" />
+            </form>
+        </div>
+    </div>
+</body>
+{% endblock %}

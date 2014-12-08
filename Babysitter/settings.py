@@ -26,6 +26,14 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = '/'
+LOGOUT_URL = '/accounts/logout/'
+
+AUTHENTICATION_BACKENDS = (
+    'web.authentication.ParentBackend',
+    'web.authentication.SitterBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Application definition
 
@@ -36,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'pipeline',
     'api',
     'web'
@@ -136,6 +145,12 @@ PIPELINE_CSS = {
             'files/css/app/index.less',
         ),
         'output_filename': 'build/index.css'
+    },
+    'signup': {
+        'source_filenames': (
+            'files/css/app/signup.less',
+        ),
+        'output_filename': 'build/signup.css'
     }
 }
 
