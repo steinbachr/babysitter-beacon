@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'widget_tweaks',
     'pipeline',
     'api',
@@ -74,10 +75,10 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
     'dev': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'sitter_dev',
-        'USER': 'sitter_user',
-        'PASSWORD': 'sitting',
+        'USER': 'bobbysteinbach',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     },
@@ -151,6 +152,12 @@ PIPELINE_CSS = {
             'files/css/app/signup.less',
         ),
         'output_filename': 'build/signup.css'
+    },
+    'parents': {
+        'source_filenames': (
+            'files/css/app/parents.less',
+        ),
+        'output_filename': 'build/parents.css'
     }
 }
 

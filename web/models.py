@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db import models as geo_models
 from django.template.defaultfilters import slugify
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
@@ -22,21 +23,22 @@ def uniq_slugify(instance, cls):
 
 
 #####-----< Models >-----#####
-class Parent(AbstractBaseUser):
+class Parent(AbstractBaseUser, geo_models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.CharField(max_length=200, unique=True)
     phone_number = models.CharField(max_length=200, blank=True, null=True, default=None)
 
-    address = models.CharField(max_length=200)
-    city = models.CharField(max_length=200)
-    state = models.CharField(max_length=20)
-    postal_code = models.CharField(max_length=20)
-    latitude = models.FloatField(default=None, blank=True, null=True)
-    longitude = models.FloatField(default=None, blank=True, null=True)
+    address = models.CharField(max_length=200, blank=True, null=True, default=None)
+    city = models.CharField(max_length=200, blank=True, null=True, default=None)
+    state = models.CharField(max_length=20, blank=True, null=True, default=None)
+    postal_code = models.CharField(max_length=20, blank=True, null=True, default=None)
+    lat_lng = geo_models.PointField(srid=3857, blank=True, null=True, default=None)
 
     slug = models.SlugField(max_length=100, default=None)
     created_time = models.DateTimeField(auto_now_add=True)
+
+    objects = geo_models.GeoManager()
 
     is_active = True
     USERNAME_FIELD = 'email'
@@ -57,23 +59,24 @@ class Parent(AbstractBaseUser):
         return "Parent {name} ({id})".format(name=self.get_full_name(), id=self.id)
 
 
-class Sitter(AbstractBaseUser):
+class Sitter(AbstractBaseUser, geo_models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.CharField(max_length=200, unique=True)
     phone_number = models.CharField(max_length=200)
 
-    address = models.CharField(max_length=200)
-    city = models.CharField(max_length=200)
-    state = models.CharField(max_length=20)
-    postal_code = models.CharField(max_length=20)
-    latitude = models.FloatField(default=None, blank=True, null=True)
-    longitude = models.FloatField(default=None, blank=True, null=True)
+    address = models.CharField(max_length=200, blank=True, null=True, default=None)
+    city = models.CharField(max_length=200, blank=True, null=True, default=None)
+    state = models.CharField(max_length=20, blank=True, null=True, default=None)
+    postal_code = models.CharField(max_length=20, blank=True, null=True, default=None)
+    lat_lng = geo_models.PointField(srid=3857, blank=True, null=True, default=None)
 
-    age = models.IntegerField(choices=[(i, i) for i in range(16, 60)])
+    age = models.IntegerField(choices=[(i, i) for i in range(16, 60)], blank=True, null=True, default=None)
     is_approved = models.BooleanField(default=False)
     slug = models.CharField(max_length=200, default=None)
     created_time = models.DateTimeField(auto_now_add=True)
+
+    objects = geo_models.GeoManager()
 
     is_active = True
     USERNAME_FIELD = 'email'
