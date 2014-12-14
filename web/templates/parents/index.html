@@ -14,70 +14,133 @@
 <body>
     <div class="header-container">
         <script type="text/template" id="parent-nav-template">
-        <div class="header" style="background-image:url(<%= header_image %>);">
-            <h1>Hi. Welcome <%= first_name %></h1>
-            <ul class="child-images-container">
-                <% children.each(function(child) { %>
-                <li>
-                    <% if (child.get('image')) { %>
-                    <img src="<%= child.get('image') %>" class="img-circle child-image" />
-                    <% } else { %>
-                    <div class="img-circle child-image no-image">
-                        <h3><%= child.get('name') %></h3>
-                        <i class="fa fa-camera"></i><br />
-                        <span>No Image Set</span>
-                    </div>
-                    <% } %>
-                </li>
-                <% }) %>
-                <li>
-                    <div class="child-image new-child img-circle">
-                        <i class="fa fa-child"></i>
-                    </div>
-                </li>
-            </ul>
-        </div>
+            <div class="header" style="background-image:url(<%= header_image %>);">
+                <h1>Hi. Welcome <%= first_name %></h1>
+                <ul class="child-images-container">
+                    <% children.each(function(child) { %>
+                    <li>
+                        <% if (child.get('image')) { %>
+                        <img src="<%= child.get('image') %>" class="img-circle child-image" />
+                        <% } else { %>
+                        <div class="img-circle child-image no-image">
+                            <h3><%= child.get('name') %></h3>
+                            <i class="fa fa-camera"></i><br />
+                            <span>No Image Set</span>
+                        </div>
+                        <% } %>
+                    </li>
+                    <% }) %>
+                    <li>
+                        <div class="child-image new-child img-circle">
+                            <i class="fa fa-child"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
-        <div class="nav-bar">
-            <a href="#/beacons">Beacons</a>
-            <a href="#/account">Account</a>
-            <span class="selected-arrow"></span>
-        </div>
+            <div class="nav-bar">
+                <a href="#/beacons">Beacons</a>
+                <a href="#/account">Account</a>
+                <span class="selected-arrow"></span>
+            </div>
 
-        <div class="add-child-modal modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Add A Child</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form">{% csrf_token %}
-                            {% for field in create_child_form %}
-                            <div class="form-group">
-                            {% if field.name != 'parent' %}<label>{{ field.label }}</label>{% endif %}
-                            {{ field|add_class:'form-control' }}
-                            </div>
-                            {% endfor %}
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary save-child">Save changes</button>
+            <div class="add-child-modal modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title">Add A Child</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form role="form">{% csrf_token %}
+                                {% for field in create_child_form %}
+                                <div class="form-group">
+                                {% if field.name != 'parent' %}<label>{{ field.label }}</label>{% endif %}
+                                {{ field|add_class:'form-control' }}
+                                </div>
+                                {% endfor %}
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary save-child">Save changes</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </script>
     </div>
 
     <div class="container parents-container">
+        <div class="beacons-container">
+            <script type="text/template" id="beacons-template">
+                <ul class="beacons">
+                    <% beacons.each(function(beacon) { %>
+                    <li class="beacon">
+                        <div class="beacon-anim">
+                            <div class="circle1"></div>
+                            <div class="circle2"></div>
+                            <div class="circle3"></div>
+                        </div>
+                        <div class="beacon-details">
+                            <h3>Beacon has been set for <%= beacon.get('for_time') %></h3>
+                            <span><% if (beacon.get('notes')) { %><%= beacon.get('notes') %><% } else { %>No Notes<% } %></span>
+                        </div>
+                    </li>
+                    <% }) %>
+                </ul>
+                <% if (parent.can_create_beacon) { %>
+                <div class="create-beacon">
+                    <span>Create a New Beacon</span><i class="fa fa-plus"></i>
+                </div>
+                <% } else { %>
+                <div class="create-beacon-disabled">
+                    <span>Add Account Info To Create Beacon</span>
+                </div>
+                <% } %>
+                <div class="add-beacon-modal modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title">Add A Beacon</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form">{% csrf_token %}
+                                    {% for field in beacon_form %}
+                                    <div class="form-group">
+                                    {% if field.name != 'created_by' %}<label>{{ field.label }}</label>{% endif %}
+                                    {{ field|add_class:'form-control' }}
+                                    </div>
+                                    {% endfor %}
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary save-beacon">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </div>
 
-
-        <div class="body-container">
-            <div class="beacons">
-
+        <div class="account-container">
+            <script type="text/plain" id="account-template">
+             <div class="payment-container">
+                <form class="form-horizontal payment-form" role="form">{% csrf_token %}
+                    {% for field in payment_form %}
+                    <div class="form-group">
+                        {% if field.name != 'stripe_token' %}<label class="col-sm-2 control-label">{{ field.label }}</label>{% endif %}
+                        <div class="col-sm-10">
+                        {{ field|add_class:'form-control' }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
+            </script>
         </div>
     </div>
 </body>
@@ -87,5 +150,6 @@
     {% javascript 'parents' %}
     <script>
     window.parentModel = new ParentModel({id: {{parent.id}}});
+    window.stripePublishableKey = "{{ stripe_publishable_key }}";
     </script>
 {% endblock %}

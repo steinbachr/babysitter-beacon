@@ -120,8 +120,10 @@ PIPELINE_JS = {
             'files/js/vendor/jquery.js',
             'files/js/vendor/jquery.easing.min.js',
             'files/js/vendor/bootstrap.js',
+            'files/js/vendor/bootstrap-datepicker.js',
             'files/js/vendor/underscore-min.js',
             'files/js/vendor/backbone-min.js',
+            'files/js/app/payment.js',
         ),
         'output_filename': 'build/core.js'
     },
@@ -133,6 +135,7 @@ PIPELINE_JS = {
     },
     'parents': {
         'source_filenames': (
+            'files/js/app/parents/models/Beacon.js',
             'files/js/app/parents/models/Child.js',
             'files/js/app/parents/models/Parent.js',
             'files/js/app/parents/parents.js',
@@ -145,6 +148,7 @@ PIPELINE_CSS = {
     'core': {
         'source_filenames': (
             'files/css/vendor/bootstrap.css',
+            'files/css/vendor/datepicker.css',
             'files/css/vendor/font-awesome/css/font-awesome.min.css',
             'files/css/app/core.less',
         ),
@@ -193,3 +197,11 @@ else:
 
 if DEBUG:
     DOMAIN = "0.0.0.0:8000"
+
+# stripe switches
+if DEBUG:
+    STRIPE_PRIVATE_KEY = 'sk_test_WkNlmEe8mE6Sk6LDwy66bmAU'
+    STRIPE_PUBLIC_KEY = 'pk_test_XD2artDVAc3Kjly64RkGjaWy'
+else:
+    STRIPE_PRIVATE_KEY = 'sk_live_GhcAxZdDIMosAMzccKzKgXsL'
+    STRIPE_PUBLIC_KEY = 'pk_live_JeQTc1rZjGqqnLtuqpgzqc3h'

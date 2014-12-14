@@ -6,6 +6,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from serializers import *
 from web.models import *
+from web.forms import *
 import pdb
 
 
@@ -42,10 +43,33 @@ class ParentViewSet(viewsets.ModelViewSet):
         parent = self.queryset.get(id=pk)
         return parent.beacons.all()
 
+    @detail_route(methods=['post'])
+    def payment(self, request, pk=None):
+        """
+        allows the parent to add their payment information
+        :param request:
+        :param pk:
+        :return:
+        """
+        parent = self.queryset.get(id=pk)
+        payment_form = PaymentForm(data=request.DATA)
+        if payment_form.is_valid():
+            stripe_token = payment_form.cleaned_data.get('stripe_token')
+            parent.create_customer(stripe_token)
+
+        return Response(self.serializer_class(parent).data)
+
 
 class BeaconViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
     model = Beacon
     queryset = Beacon.objects.filter(for_time__gte=datetime.datetime.now())
+    serializer_class = BeaconSerializer
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(BeaconViewSet, self).dispatch(*args, **kwargs)
 
 
 class SitterBeaconResponseViewSet(viewsets.ModelViewSet):

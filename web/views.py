@@ -85,7 +85,10 @@ def parents_dashboard(request, slug=None):
     parent = Parent.objects.get(slug=slug)
     return render(request, 'parents/index.html', {
         'parent': parent,
-        'create_child_form': ChildForm(initial={'parent': parent.id})
+        'stripe_publishable_key': settings.STRIPE_PUBLIC_KEY,
+        'create_child_form': ChildForm(initial={'parent': parent.id}),
+        'beacon_form': BeaconForm(initial={'created_by': parent.id}),
+        'payment_form': PaymentForm()
     })
 
 

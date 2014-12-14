@@ -22,6 +22,11 @@ $(document).ready(function() {
             this.model.addChildFromForm(this.$el.find('.add-child-modal form'));
         },
 
+        _containerForTab: function($clickedTab) {
+            var tabIndex = $clickedTab.index();
+            return $($('.container').children()[tabIndex]);
+        },
+
         _selectTab: function($clickedTab) {
             var PADDING = 2;
             var clickedTabWidth = $clickedTab.width(),
@@ -31,6 +36,10 @@ $(document).ready(function() {
             $arrow.animate({
                 left: newLeft
             }, 500);
+
+            var $newContainer = this._containerForTab($clickedTab);
+            $newContainer.siblings().hide();
+            $newContainer.show();
         },
 
         selectTab: function(evt) {
@@ -43,7 +52,56 @@ $(document).ready(function() {
         }
     });
 
+    var BeaconsView = Backbone.View.extend({
+        el: ".beacons-container",
+        template: _.template($('#beacons-template').html()),
+        events: {
+            'click .create-beacon': 'createBeacon',
+            'click .save-beacon': 'saveBeacon'
+        },
+        initialize: function() {
+            this.model.bind('sync', this.render, this);
+            this.model.bind('change:beacons', this.render, this);
+        },
+
+        createBeacon: function() {
+            this.$el.find('.add-beacon-modal').modal();
+        },
+
+        saveBeacon: function() {
+            this.model.addBeaconFromForm(this.$el.find('.add-beacon-modal form'));
+        },
+
+        render: function() {
+            this.$el.html(this.template({beacons: this.model.get('beacons')}));
+            return this;
+        }
+    });
+
+    var AccountView = Backbone.View.extend({
+        el: '.account-container',
+        template: _.template($('#account-template').html()),
+        events: {
+            'submit .payment-form': 'addPaymentInfo'
+        },
+        initialize: function() {
+
+        },
+
+        addPaymentInfo: function() {
+
+        }
+    });
+
     new NavBarView({
+        model: parentModel
+    });
+
+    new BeaconsView({
+        model: parentModel
+    });
+
+    new AccountView({
         model: parentModel
     });
 

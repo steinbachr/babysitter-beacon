@@ -2,6 +2,8 @@
 
 @lightgray: #eee;
 
+body.modal-open { overflow:auto; }
+
 .header-container {
     .header { background-size:cover; height:350px;
         h1 { color:white; margin:0; background:rgba(0, 0, 0, .3); padding:10px; text-align: center; }
@@ -31,6 +33,40 @@
     }
 }
 
-.parents-container {
+.parents-container { padding-top:20px;
+    .beacons-container {
+        .beacons { list-style-type:none;
+            .beacon { margin:30px 0px; border-top:solid 1px #777; padding:10px 0px;
+                &:first-child { border-top:none; }
+                .beacon-anim { position:relative; top:40px;
+                    div { width:5px; height:5px; border-radius:50%; border:solid 2px; position:absolute;
+                        &.circle1 { -webkit-animation: beacon 3s linear 0s infinite; animation: beacon 3s linear 0s infinite; }
+                        &.circle2 { -webkit-animation: beacon 3s linear 1s infinite; animation: beacon 3s linear 1s infinite; }
+                        &.circle2 { -webkit-animation: beacon 3s linear 2s infinite; animation: beacon 3s linear 2s infinite; }
+                    }
+                }
+                .beacon-details { padding-left:100px; }
+            }
+        }
+        .create-beacon, .create-beacon-disabled { width:200px; padding:10px; margin:50px auto; border:solid 1px #ccc; text-align:center; cursor:pointer;
+            i { padding-left:10px; }
+            &:hover { background: #eee; }
+        }
+        .create-beacon-disabled { background:#eee; cursor:default; width:250px; }
+    }
+    .account-container {
+        .payment-container { width:50%; border:solid 1px #ccc; padding:20px; border-radius:7px; margin:auto;
+            .btn { display:block; margin:auto; }
+        }
+    }
+}
 
+@-webkit-keyframes beacon {
+    from { width: 5px; height:5px; }
+    to { width:100px; height:100px; margin-top: -47px; margin-left:-47px; }
+}
+
+@keyframes beacon {
+    from { width: 5px; height:5px; }
+    to { width:100px; height:100px; margin-top: -47px; margin-left:-47px; }
 }

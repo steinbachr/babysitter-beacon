@@ -6,6 +6,10 @@ from django.db.models.signals import pre_save
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
+import random
+import stripe
+
+stripe.api_key = settings.STRIPE_PRIVATE_KEY
 
 
 def uniq_slugify(instance, cls):
@@ -48,6 +52,8 @@ class Parent(AbstractBaseUser, geo_models.Model):
     postal_code = models.CharField(max_length=20, blank=True, null=True, default=None)
     lat_lng = geo_models.PointField(srid=3857, blank=True, null=True, default=None)
 
+    stripe_customer_id = models.CharField(max_length=200, blank=True, null=True, default=None)
+
     slug = models.SlugField(max_length=100, default=None)
     created_time = models.DateTimeField(auto_now_add=True)
     header_image = models.ImageField(upload_to=parent_upload_path, blank=True, default=None, null=True)
@@ -57,6 +63,7 @@ class Parent(AbstractBaseUser, geo_models.Model):
     is_active = True
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
 
     #####-----< Abstract Base User Implementation >-----#####
     def get_full_name(self):
@@ -69,10 +76,41 @@ class Parent(AbstractBaseUser, geo_models.Model):
     def user_type():
         return "Parent"
 
+
     #####-----< Properties >-----#####
     @property
     def best_header_image(self):
-        return get_absolute_url(self.header_image.path if self.header_image else "files/images/mountains.jpg")
+        return get_absolute_url(self.header_image.path if self.header_image else random.choice(["files/images/mountains.jpg", "files/images/space.jpg"]))
+
+    @property
+    def can_create_beacon(self):
+        return self.stripe_customer_id is not None and self.lat_lng is not None
+
+    @property
+    def service_cost(self):
+        FLAT_FEE = 18
+        OUR_FEE = 2
+
+        return (FLAT_FEE + OUR_FEE) * 1000
+
+
+    #####-----< Methods >-----#####
+    def create_customer(self, stripe_token):
+        if not self.stripe_customer_id:
+            customer = stripe.Customer.create(
+                card=stripe_token,
+                description=self.email
+            )
+
+            self.stripe_customer_id = customer.id
+            self.save()
+
+    def charge_customer(self):
+        stripe.Charge.create(
+            amount=self.service_cost,
+            currency="usd",
+            customer=self.stripe_customer_id
+        )
 
     def __unicode__(self):
         return "Parent {name} ({id})".format(name=self.get_full_name(), id=self.id)

@@ -57,6 +57,17 @@ class SitterSignupForm(SignupForm):
         }
 
 
+class PaymentForm(forms.Form):
+    stripe_token = forms.CharField(required=True, widget=forms.HiddenInput)
+    card_number = forms.CharField(required=False)
+    cvc = forms.CharField(required=False)
+    expiration_month = forms.CharField(required=False)
+    expiration_year = forms.CharField(required=False)
+
+
+#####-----< Parent Forms >-----#####
+
+
 class ChildForm(forms.ModelForm):
     class Meta:
         model = Child
@@ -64,3 +75,18 @@ class ChildForm(forms.ModelForm):
         widgets = {
             'parent': forms.HiddenInput
         }
+
+
+class BeaconForm(forms.ModelForm):
+    class Meta:
+        model = Beacon
+        exclude = ['created_time']
+        widgets = {
+            'created_by': forms.HiddenInput
+        }
+
+
+class ParentProfileForm(forms.ModelForm):
+    class Meta:
+        model = Parent
+        fields = ['address', 'city', 'state', 'postal_code']
