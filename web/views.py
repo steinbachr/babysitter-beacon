@@ -83,8 +83,9 @@ def app_logout(request):
 @slug_matches_login
 def parents_dashboard(request, slug=None):
     parent = Parent.objects.get(slug=slug)
-    return render(request, 'parents/dashboard.html', {
-        'parent': parent
+    return render(request, 'parents/index.html', {
+        'parent': parent,
+        'create_child_form': ChildForm(initial={'parent': parent.id})
     })
 
 

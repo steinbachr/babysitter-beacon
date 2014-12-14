@@ -1,14 +1,23 @@
 @import "core";
 
-.header { background-size:cover; height:350px;
-    h1 { color:white; margin:0; background:rgba(0, 0, 0, .3); padding:10px; text-align: center; }
-    .child-images-container { list-style-type:none; padding-top:90px; text-align:center; margin-bottom:0;
-        li { display:inline-block; vertical-align: middle;
-            .child-image { width:200px; height:200px; padding:10px;
-                &.new-child { width:100px; height:100px; background:#eee; border:solid 1px #777; cursor:pointer;
-                    i { font-size:40px; color:#777; padding-top:20px; }
-                    &:hover { background:#666;
-                        i { color:#eee; }
+@lightgray: #eee;
+
+.header-container {
+    .header { background-size:cover; height:350px;
+        h1 { color:white; margin:0; background:rgba(0, 0, 0, .3); padding:10px; text-align: center; }
+        .child-images-container { list-style-type:none; padding-top:60px; text-align:center; margin-bottom:0; padding-left:0;
+            li { display:inline-block; vertical-align: middle;
+                .child-image { width:200px; height:200px; padding:10px;
+                    &.new-child { width:100px; height:100px; background:@lightgray; border:solid 1px #777; cursor:pointer;
+                        i { font-size:40px; color:#777; padding-top:20px; }
+                        &:hover { background:#666;
+                            i { color:#eee; }
+                        }
+                    }
+                    &.no-image { padding-top:40px; background:@lightgray;
+                        i { font-size:40px; }
+                        span { font-size:10px; font-weight: lighter; }
+
                     }
                 }
             }
@@ -16,9 +25,9 @@
     }
     .nav-bar { height:55px; border-top:solid 2px #ccc; border-bottom:solid 2px #666; padding:5px; text-align:center; position:relative;
         a { color:#555; font-size:21px; padding:0px 20px;
-            &:hover { text-decoration:none; }
+            &:hover, &:active, &:focus { text-decoration:none; border:none; }
         }
-        .selected-arrow { .triangle-up(12px); position:absolute; bottom:0; left:620px;}
+        .selected-arrow { .triangle-up(12px); position:absolute; bottom:0; left:0px;}
     }
 }
 

@@ -55,3 +55,12 @@ class SitterSignupForm(SignupForm):
         widgets = {
             'password': forms.PasswordInput
         }
+
+
+class ChildForm(forms.ModelForm):
+    class Meta:
+        model = Child
+        exclude = ['image']
+        widgets = {
+            'parent': forms.HiddenInput
+        }

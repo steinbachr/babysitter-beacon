@@ -1,14 +1,29 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from serializers import *
 from web.models import *
+import pdb
 
 
 class SitterViewSet(viewsets.ModelViewSet):
     model = Sitter
     queryset = Sitter.objects.filter(is_approved=True)
+
+
+class ChildViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    model = Child
+    queryset = Child.objects.all()
+    serializer_class = ChildSerializer
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ChildViewSet, self).dispatch(*args, **kwargs)
 
 
 class ParentViewSet(viewsets.ModelViewSet):

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load pipeline %}
+{% load widget_tweaks %}
+
+{% block meta %}
+    <title>SitterBeacon Parent Dashboard</title>
+{% endblock %}
+
+{% block css %}
+    {% stylesheet 'parents' %}
+{% endblock %}
+
+{% block body %}
+<body>
+    <div class="header-container">
+        <script type="text/template" id="parent-nav-template">
+        <div class="header" style="background-image:url(<%= header_image %>);">
+            <h1>Hi. Welcome <%= first_name %></h1>
+            <ul class="child-images-container">
+                <% children.each(function(child) { %>
+                <li>
+                    <% if (child.get('image')) { %>
+                    <img src="<%= child.get('image') %>" class="img-circle child-image" />
+                    <% } else { %>
+                    <div class="img-circle child-image no-image">
+                        <h3><%= child.get('name') %></h3>
+                        <i class="fa fa-camera"></i><br />
+                        <span>No Image Set</span>
+                    </div>
+                    <% } %>
+                </li>
+                <% }) %>
+                <li>
+                    <div class="child-image new-child img-circle">
+                        <i class="fa fa-child"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-bar">
+            <a href="#/beacons">Beacons</a>
+            <a href="#/account">Account</a>
+            <span class="selected-arrow"></span>
+        </div>
+
+        <div class="add-child-modal modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Add A Child</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form">{% csrf_token %}
+                            {% for field in create_child_form %}
+                            <div class="form-group">
+                            {% if field.name != 'parent' %}<label>{{ field.label }}</label>{% endif %}
+                            {{ field|add_class:'form-control' }}
+                            </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save-child">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </script>
+    </div>
+
+    <div class="container parents-container">
+
+
+        <div class="body-container">
+            <div class="beacons">
+
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+
+{% block js %}
+    {% javascript 'parents' %}
+    <script>
+    window.parentModel = new ParentModel({id: {{parent.id}}});
+    </script>
+{% endblock %}

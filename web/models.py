@@ -3,6 +3,7 @@ from django.contrib.gis.db import models as geo_models
 from django.template.defaultfilters import slugify
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
 
@@ -22,6 +23,18 @@ def uniq_slugify(instance, cls):
     return slug
 
 
+def parent_upload_path(instance, filename):
+    return 'parents/{id}/header'.format(id=instance.id)
+
+
+def child_upload_path(instance, filename):
+    return 'parents/{id}/child{count}'.format(id=instance.parent.id, count=instance.parent.children.count())
+
+
+def get_absolute_url(image_path):
+    return "{static}{image}".format(static=settings.STATIC_URL, image=image_path)
+
+
 #####-----< Models >-----#####
 class Parent(AbstractBaseUser, geo_models.Model):
     first_name = models.CharField(max_length=200)
@@ -37,6 +50,7 @@ class Parent(AbstractBaseUser, geo_models.Model):
 
     slug = models.SlugField(max_length=100, default=None)
     created_time = models.DateTimeField(auto_now_add=True)
+    header_image = models.ImageField(upload_to=parent_upload_path, blank=True, default=None, null=True)
 
     objects = geo_models.GeoManager()
 
@@ -54,6 +68,11 @@ class Parent(AbstractBaseUser, geo_models.Model):
     @staticmethod
     def user_type():
         return "Parent"
+
+    #####-----< Properties >-----#####
+    @property
+    def best_header_image(self):
+        return get_absolute_url(self.header_image.path if self.header_image else "files/images/mountains.jpg")
 
     def __unicode__(self):
         return "Parent {name} ({id})".format(name=self.get_full_name(), id=self.id)
@@ -137,9 +156,11 @@ class Child(models.Model):
     )
 
     parent = models.ForeignKey(Parent, related_name='children')
+    name = models.CharField(max_length=200)
     age = models.IntegerField()
     behavior = models.CharField(max_length=100, choices=BEHAVIOR_CHOICES)
     notes = models.TextField(max_length=1000)
+    image = models.ImageField(upload_to=child_upload_path, blank=True, null=True, default=None)
 
 
 #####-----< Receivers >-----#####

@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'widget_tweaks',
     'pipeline',
+    'rest_framework',
     'api',
     'web'
 )
@@ -129,6 +130,14 @@ PIPELINE_JS = {
             'files/js/app/index.js',
         ),
         'output_filename': 'build/index.js'
+    },
+    'parents': {
+        'source_filenames': (
+            'files/js/app/parents/models/Child.js',
+            'files/js/app/parents/models/Parent.js',
+            'files/js/app/parents/parents.js',
+        ),
+        'output_filename': 'build/parents.js'
     }
 }
 
@@ -166,6 +175,7 @@ PIPELINE_COMPILERS = (
 )
 PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
+PIPELINE_TEMPLATE_FUNC = '_.template'
 
 STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 STATICFILES_FINDERS = (
@@ -180,3 +190,6 @@ if DEBUG:
     DATABASES['default'] = DATABASES['dev']
 else:
     DATABASES['default'] = DATABASES['prod']
+
+if DEBUG:
+    DOMAIN = "0.0.0.0:8000"
