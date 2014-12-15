@@ -4,7 +4,7 @@ var Payment = function() {
 
 Payment.prototype.createToken = function($form) {
     var _this = this;
-    var deferredResponse = $.Deferred(this.responseHandler);
+    var deferred = $.Deferred();
 
     Stripe.card.createToken({
         number: $form.find('input[name="card_number"]').val(),
@@ -12,10 +12,11 @@ Payment.prototype.createToken = function($form) {
         exp_month: $form.find('input[name="expiration_month"]').val(),
         exp_year: $form.find('input[name="expiration_year"]').val()
     }, function(status, response) {
-        deferredResponse.resolve(status, response, $form);
+        deferred.resolveWith(_this, [status, response, $form]);
     });
 
-    return deferredResponse;
+    $.when(deferred).then(this.responseHandler);
+    return deferred.promise();
 };
 
 Payment.prototype.responseHandler = function(status, response, $form) {

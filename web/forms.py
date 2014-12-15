@@ -86,7 +86,7 @@ class BeaconForm(forms.ModelForm):
         }
 
 
-class ParentProfileForm(forms.ModelForm):
+class ParentLocationForm(forms.ModelForm):
     class Meta:
         model = Parent
         fields = ['address', 'city', 'state', 'postal_code']

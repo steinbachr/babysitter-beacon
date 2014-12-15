@@ -55,9 +55,15 @@ body.modal-open { overflow:auto; }
         .create-beacon-disabled { background:#eee; cursor:default; width:250px; }
     }
     .account-container {
-        .payment-container { width:50%; border:solid 1px #ccc; padding:20px; border-radius:7px; margin:auto;
+        .payment-container, .location-container { width:50%; border:solid 1px #ccc; padding:20px; border-radius:7px; margin:auto;
             .btn { display:block; margin:auto; }
         }
+        .location-container { margin-top:20px; }
+
+        .submitted-payment-label, .submitted-location-label { font-size:20px; width:400px; display:block; margin:auto;
+            i { margin-left:10px; }
+        }
+        .submitted-location-label { margin-top:20px; }
     }
 }
 

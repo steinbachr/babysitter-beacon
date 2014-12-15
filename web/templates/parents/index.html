@@ -13,7 +13,7 @@
 {% block body %}
 <body>
     <div class="header-container">
-        <script type="text/template" id="parent-nav-template">
+        <script type="text/plain" id="parent-nav-template">
             <div class="header" style="background-image:url(<%= header_image %>);">
                 <h1>Hi. Welcome <%= first_name %></h1>
                 <ul class="child-images-container">
@@ -73,7 +73,7 @@
 
     <div class="container parents-container">
         <div class="beacons-container">
-            <script type="text/template" id="beacons-template">
+            <script type="text/plain" id="beacons-template">
                 <ul class="beacons">
                     <% beacons.each(function(beacon) { %>
                     <li class="beacon">
@@ -89,7 +89,7 @@
                     </li>
                     <% }) %>
                 </ul>
-                <% if (parent.can_create_beacon) { %>
+                <% if (parent.get('can_create_beacon')) { %>
                 <div class="create-beacon">
                     <span>Create a New Beacon</span><i class="fa fa-plus"></i>
                 </div>
@@ -127,7 +127,11 @@
 
         <div class="account-container">
             <script type="text/plain" id="account-template">
-             <div class="payment-container">
+            <% if (has_payment_info) { %>
+            <span class="label label-success submitted-payment-label">Payment Information Submitted<i class="fa fa-check"></i></span>
+            <% } else { %>
+            <div class="payment-container">
+                <h2>Payment Information</h2>
                 <form class="form-horizontal payment-form" role="form">{% csrf_token %}
                     {% for field in payment_form %}
                     <div class="form-group">
@@ -140,6 +144,25 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
+            <% } %>
+            <% if (has_location) { %>
+            <span class="label label-info submitted-location-label">Location Information Submitted<i class="fa fa-check"></i></span>
+            <% } else { %>
+            <div class="location-container">
+                <h2>Location Information</h2>
+                <form class="form-horizontal location-form" role="form">
+                    {% for field in location_form %}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ field.label }}</label>
+                        <div class="col-sm-10">
+                        {{ field|add_class:'form-control' }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <% } %>
             </script>
         </div>
     </div>

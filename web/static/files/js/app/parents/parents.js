@@ -73,7 +73,7 @@ $(document).ready(function() {
         },
 
         render: function() {
-            this.$el.html(this.template({beacons: this.model.get('beacons')}));
+            this.$el.html(this.template({beacons: this.model.get('beacons'), parent: this.model}));
             return this;
         }
     });
@@ -82,14 +82,26 @@ $(document).ready(function() {
         el: '.account-container',
         template: _.template($('#account-template').html()),
         events: {
-            'submit .payment-form': 'addPaymentInfo'
+            'submit .payment-form': 'addPaymentInfo',
+            'submit .location-form': 'addLocationInfo'
         },
         initialize: function() {
-
+            this.model.bind('sync', this.render, this);
         },
 
-        addPaymentInfo: function() {
+        addPaymentInfo: function(evt) {
+            evt.preventDefault();
+            this.model.addPaymentInfoFromForm($(evt.currentTarget));
+        },
 
+        addLocationInfo: function(evt) {
+            evt.preventDefault();
+            this.model.addLocationFromForm($(evt.currentTarget));
+        },
+
+        render: function() {
+            this.$el.html(this.template(this.model.attributes));
+            return this;
         }
     });
 

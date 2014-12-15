@@ -80,18 +80,27 @@ class Parent(AbstractBaseUser, geo_models.Model):
     #####-----< Properties >-----#####
     @property
     def best_header_image(self):
-        return get_absolute_url(self.header_image.path if self.header_image else random.choice(["files/images/mountains.jpg", "files/images/space.jpg"]))
+        header_choices = ["files/images/mountains.jpg", "files/images/space.jpg", "files/images/beach.jpg"]
+        return get_absolute_url(self.header_image.path if self.header_image else random.choice(header_choices))
+
+    @property
+    def has_payment_info(self):
+        return self.stripe_customer_id is not None
+
+    @property
+    def has_location(self):
+        return (self.state and self.city and self.address and self.postal_code) is not None
 
     @property
     def can_create_beacon(self):
-        return self.stripe_customer_id is not None and self.lat_lng is not None
+        return self.has_payment_info and self.has_location
 
     @property
     def service_cost(self):
         FLAT_FEE = 18
         OUR_FEE = 2
 
-        return (FLAT_FEE + OUR_FEE) * 1000
+        return (FLAT_FEE + OUR_FEE) * 100
 
 
     #####-----< Methods >-----#####

@@ -88,7 +88,8 @@ def parents_dashboard(request, slug=None):
         'stripe_publishable_key': settings.STRIPE_PUBLIC_KEY,
         'create_child_form': ChildForm(initial={'parent': parent.id}),
         'beacon_form': BeaconForm(initial={'created_by': parent.id}),
-        'payment_form': PaymentForm()
+        'payment_form': PaymentForm(),
+        'location_form': ParentLocationForm(instance=parent)
     })
 
 

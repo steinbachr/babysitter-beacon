@@ -20,13 +20,14 @@ class ChildSerializer(serializers.ModelSerializer):
 
 
 class ParentSerializer(serializers.ModelSerializer):
-    children = ChildSerializer(many=True)
-    beacons = BeaconSerializer(many=True)
-    header_image = serializers.CharField(source='best_header_image')
+    children = ChildSerializer(many=True, read_only=True)
+    beacons = BeaconSerializer(many=True, read_only=True)
+    header_image = serializers.CharField(source='best_header_image', read_only=True)
 
     class Meta:
         model = Parent
-        fields = ['first_name', 'last_name', 'email', 'slug', 'header_image', 'children', 'beacons', 'can_create_beacon']
+        fields = ['first_name', 'last_name', 'email', 'slug', 'header_image', 'state', 'city', 'address', 'postal_code',
+                  'children', 'beacons', 'can_create_beacon', 'has_payment_info', 'has_location']
 
 
 class SitterSerializer(serializers.ModelSerializer):

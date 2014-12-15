@@ -28,6 +28,8 @@ class ChildViewSet(viewsets.ModelViewSet):
 
 
 class ParentViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
     model = Parent
     queryset = Parent.objects.all()
     serializer_class = ParentSerializer
@@ -59,6 +61,9 @@ class ParentViewSet(viewsets.ModelViewSet):
 
         return Response(self.serializer_class(parent).data)
 
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ParentViewSet, self).dispatch(*args, **kwargs)
 
 class BeaconViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
