@@ -1,17 +1,20 @@
 from django.db import models
 from django.contrib.gis.db import models as geo_models
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from django.template.defaultfilters import slugify
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from geocoding.geocoder import Geocoder
 import datetime
 import random
 import stripe
 
 stripe.api_key = settings.STRIPE_PRIVATE_KEY
 
-
+#####-----< Generic Helper Functions >-----#####
 def uniq_slugify(instance, cls):
     """
     a wrapper around slugify that guarantees uniqueness of slugs in the queryset
@@ -39,6 +42,13 @@ def get_absolute_url(image_path):
     return "{static}{image}".format(static=settings.STATIC_URL, image=image_path)
 
 
+#####-----< Managers >-----#####
+class BeaconManager(models.Manager):
+    def upcoming(self):
+        queryset = self.get_queryset()
+        return queryset.filter(for_time__gte=datetime.datetime.now())
+
+
 #####-----< Models >-----#####
 class Parent(AbstractBaseUser, geo_models.Model):
     first_name = models.CharField(max_length=200)
@@ -50,7 +60,7 @@ class Parent(AbstractBaseUser, geo_models.Model):
     city = models.CharField(max_length=200, blank=True, null=True, default=None)
     state = models.CharField(max_length=20, blank=True, null=True, default=None)
     postal_code = models.CharField(max_length=20, blank=True, null=True, default=None)
-    lat_lng = geo_models.PointField(srid=3857, blank=True, null=True, default=None)
+    lat_lng = geo_models.PointField(srid=4326, blank=True, null=True, default=None)
 
     stripe_customer_id = models.CharField(max_length=200, blank=True, null=True, default=None)
 
@@ -135,7 +145,7 @@ class Sitter(AbstractBaseUser, geo_models.Model):
     city = models.CharField(max_length=200, blank=True, null=True, default=None)
     state = models.CharField(max_length=20, blank=True, null=True, default=None)
     postal_code = models.CharField(max_length=20, blank=True, null=True, default=None)
-    lat_lng = geo_models.PointField(srid=3857, blank=True, null=True, default=None)
+    lat_lng = geo_models.PointField(srid=4326, blank=True, null=True, default=None)
 
     age = models.IntegerField(choices=[(i, i) for i in range(16, 60)], blank=True, null=True, default=None)
     is_approved = models.BooleanField(default=False)
@@ -162,12 +172,29 @@ class Sitter(AbstractBaseUser, geo_models.Model):
 
     #####-----< Properties >-----#####
     @property
+    def has_location(self):
+        return (self.state and self.city and self.address and self.postal_code) is not None
+
+    @property
     def jobs(self):
         return SitterBeaconResponse.objects.filter(sitter=self, chosen=True)
 
     @property
     def completed_jobs(self):
         return self.jobs.filter(beacon__for_time__lte=datetime.datetime.now())
+
+    #####-----< Methods >-----#####
+    def get_beacons_within(self, distance=20):
+        """
+        get all beacons which are active and within the given distance
+        :param distance: the distance (in km) to limit active beacon retrieval to
+        :return:
+        """
+        try:
+            return Beacon.objects.upcoming().filter(created_by__lat_lng__distance_lte=(self.lat_lng, D(km=distance)))
+        except ValueError:
+            print "sitter has no lat_lng set"
+            return []
 
     def __unicode__(self):
         return "Sitter {name} ({id})".format(name=self.get_full_name(), id=self.id)
@@ -178,6 +205,8 @@ class Beacon(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     for_time = models.DateTimeField(default=datetime.datetime.now)
     notes = models.TextField(blank=True, null=True, default=None)
+
+    objects = BeaconManager()
 
     @property
     def num_responses(self):
@@ -211,13 +240,20 @@ class Child(models.Model):
 
 
 #####-----< Receivers >-----#####
+def _pre_save(sender, instance=None, **kwargs):
+    """helper for the pre_parent_save and pre_sitter_save methods below, since they both do essentially the same thing"""
+    if not instance.id:
+        instance.slug = uniq_slugify(instance, sender)
+    if instance.has_location and not instance.lat_lng:
+        geocoder = Geocoder(instance)
+        location = geocoder.geolocate()
+        instance.lat_lng = Point(location.longitude, location.latitude)
+    return instance
+
 @receiver(pre_save, sender=Parent)
 def pre_parent_save(sender, instance=None, **kwargs):
-    if not instance.id:
-        instance.slug = uniq_slugify(instance, Parent)
-
+    _pre_save(sender, instance=instance, **kwargs)
 
 @receiver(pre_save, sender=Sitter)
 def pre_sitter_save(sender, instance=None, **kwargs):
-    if not instance.id:
-        instance.slug = uniq_slugify(instance, Sitter)
+    _pre_save(sender, instance=instance, **kwargs)

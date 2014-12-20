@@ -141,6 +141,13 @@ PIPELINE_JS = {
             'files/js/app/parents/parents.js',
         ),
         'output_filename': 'build/parents.js'
+    },
+    'sitters': {
+        'source_filenames': (
+            'files/js/app/sitters/models/Sitter.js',
+            'files/js/app/sitters/sitters.js',
+        ),
+        'output_filename': 'build/sitters.js'
     }
 }
 
@@ -171,6 +178,12 @@ PIPELINE_CSS = {
             'files/css/app/parents.less',
         ),
         'output_filename': 'build/parents.css'
+    },
+    'sitters': {
+        'source_filenames': (
+            'files/css/app/sitters.less',
+        ),
+        'output_filename': 'build/sitters.css'
     }
 }
 

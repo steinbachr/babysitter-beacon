@@ -14,6 +14,15 @@ class SitterViewSet(viewsets.ModelViewSet):
     model = Sitter
     queryset = Sitter.objects.filter(is_approved=True)
 
+    @detail_route(methods=['get'])
+    def nearby_beacons(self, request, pk=None):
+        sitter = self.get_object()
+        if not sitter.has_location:
+            return Response(status=400, data={'errors': "No location set, can't get beacons"})
+
+        future_beacons = Beacon.objects.upcoming()
+        return Response(BeaconSerializer(future_beacons, many=True).data)
+
 
 class ChildViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

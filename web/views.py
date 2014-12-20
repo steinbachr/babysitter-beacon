@@ -97,6 +97,6 @@ def parents_dashboard(request, slug=None):
 @slug_matches_login
 def sitters_dashboard(request, slug=None):
     sitter = Sitter.objects.get(slug=slug)
-    return render(request, 'sitters/dashboard.html', {
+    return render(request, 'sitters/index.html', {
         'sitter': sitter
     })

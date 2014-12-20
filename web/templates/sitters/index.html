@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
+{% load pipeline %}
 
 {% block meta %}
     <title>SitterBeacon Sitter Dashboard</title>
+{% endblock %}
+
+{% block css %}
+    {% stylesheet 'sitters' %}
 {% endblock %}
 
 {% block body %}
     <body>
         <h1>{{ sitter.first_name }}'s Dashboard ({{ sitter.id }})</h1>
     </body>
+{% endblock %}
+
+{% block js %}
+    {% javascript 'sitters' %}
 {% endblock %}
