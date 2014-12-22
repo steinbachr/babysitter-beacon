@@ -12,7 +12,8 @@ import pdb
 
 class SitterViewSet(viewsets.ModelViewSet):
     model = Sitter
-    queryset = Sitter.objects.filter(is_approved=True)
+    queryset = Sitter.objects.all()
+    serializer_class = SitterSerializer
 
     @detail_route(methods=['get'])
     def nearby_beacons(self, request, pk=None):
@@ -22,6 +23,10 @@ class SitterViewSet(viewsets.ModelViewSet):
 
         future_beacons = Beacon.objects.upcoming()
         return Response(BeaconSerializer(future_beacons, many=True).data)
+
+    @detail_route(methods=['get'])
+    def upcoming_jobs(self, request, pk=None):
+        sitter = self.get_object()
 
 
 class ChildViewSet(viewsets.ModelViewSet):

@@ -31,11 +31,15 @@ def uniq_slugify(instance, cls):
 
 
 def parent_upload_path(instance, filename):
-    return 'parents/{id}/header'.format(id=instance.id)
+    return 'parents/{id}/'.format(id=instance.id)
 
 
 def child_upload_path(instance, filename):
-    return 'parents/{id}/child{count}'.format(id=instance.parent.id, count=instance.parent.children.count())
+    return 'parents/{id}/child{count}/'.format(id=instance.parent.id, count=instance.parent.children.count())
+
+
+def sitter_upload_path(instance, filename):
+    return 'sitters/{id}/'.format(id=instance.id)
 
 
 def get_absolute_url(image_path):
@@ -147,10 +151,15 @@ class Sitter(AbstractBaseUser, geo_models.Model):
     postal_code = models.CharField(max_length=20, blank=True, null=True, default=None)
     lat_lng = geo_models.PointField(srid=4326, blank=True, null=True, default=None)
 
+    stripe_recipient_id = models.CharField(max_length=200, blank=True, null=True, default=None)
+
     age = models.IntegerField(choices=[(i, i) for i in range(16, 60)], blank=True, null=True, default=None)
     is_approved = models.BooleanField(default=False)
     slug = models.CharField(max_length=200, default=None)
     created_time = models.DateTimeField(auto_now_add=True)
+
+    header_image = models.ImageField(upload_to=sitter_upload_path, blank=True, default=None, null=True)
+    profile_image = models.ImageField(upload_to=sitter_upload_path, blank=True, default=None, null=True)
 
     objects = geo_models.GeoManager()
 
@@ -172,6 +181,11 @@ class Sitter(AbstractBaseUser, geo_models.Model):
 
     #####-----< Properties >-----#####
     @property
+    def best_header_image(self):
+        header_choices = ["files/images/beach2.jpg", "files/images/stars.jpg"]
+        return get_absolute_url(self.header_image.path if self.header_image else random.choice(header_choices))
+
+    @property
     def has_location(self):
         return (self.state and self.city and self.address and self.postal_code) is not None
 
@@ -180,8 +194,12 @@ class Sitter(AbstractBaseUser, geo_models.Model):
         return SitterBeaconResponse.objects.filter(sitter=self, chosen=True)
 
     @property
+    def upcoming_jobs(self):
+        return self.jobs.filter(beacon__for_time__gte=datetime.datetime.now())
+
+    @property
     def completed_jobs(self):
-        return self.jobs.filter(beacon__for_time__lte=datetime.datetime.now())
+        return self.jobs.filter(beacon__for_time__lt=datetime.datetime.now())
 
     #####-----< Methods >-----#####
     def get_beacons_within(self, distance=20):
@@ -198,6 +216,11 @@ class Sitter(AbstractBaseUser, geo_models.Model):
 
     def __unicode__(self):
         return "Sitter {name} ({id})".format(name=self.get_full_name(), id=self.id)
+
+
+class Payment(models.Model):
+    stripe_transfer_id = models.CharField(max_length=200, blank=True, null=True, default=None)
+    stripe_transfer_status = models.CharField(max_length=100, blank=True, null=True, default=None)
 
 
 class Beacon(models.Model):

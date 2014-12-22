@@ -1,3 +1,3 @@
-/**
- * Created by bobbysteinbach on 12/20/14.
- */
+var SitterModel = Backbone.Model.extend({
+    urlRoot: '/api/sitters'
+});

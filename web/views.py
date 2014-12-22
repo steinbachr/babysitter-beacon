@@ -98,5 +98,7 @@ def parents_dashboard(request, slug=None):
 def sitters_dashboard(request, slug=None):
     sitter = Sitter.objects.get(slug=slug)
     return render(request, 'sitters/index.html', {
-        'sitter': sitter
+        'sitter': sitter,
+        'stripe_publishable_key': settings.STRIPE_PUBLIC_KEY,
+        'location_form': ParentLocationForm(instance=sitter)
     })

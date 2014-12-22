@@ -1,3 +1,7 @@
-/**
- * Created by bobbysteinbach on 12/20/14.
- */
+$(document).ready(function() {
+    new NavBarView({
+        model: sitterModel
+    });
+
+    sitterModel.fetch();
+});

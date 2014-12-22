@@ -1,0 +1,33 @@
+@import "core";
+
+@lightgray: #eee;
+
+.header-container {
+    .header { background-size:cover; height:350px; text-align: center;
+        h1 { color:white; margin:0; background:rgba(0, 0, 0, .3); padding:10px; text-align: center; }
+        .profile-image { margin-top:50px;
+            i { font-size:100px; }
+        }
+    }
+    .nav-bar { height:55px; border-top:solid 2px #ccc; border-bottom:solid 2px #666; padding:5px; text-align:center; position:relative;
+        a { color:#555; font-size:21px; padding:0px 20px;
+            &:hover, &:active, &:focus { text-decoration:none; border:none; }
+        }
+        .selected-arrow { .triangle-up(12px); position:absolute; bottom:0; left:0px;}
+    }
+}
+
+.jobs-container {
+    .filters { text-align:center;
+        .filter-group { display:table; margin:auto; margin-top:30px;
+            .filters-header { display:table-row;
+                & > h4 { display:table-cell; padding:5px 15px 0px 15px; }
+            }
+            .filters-body { display:table-row;
+                & > div { display:table-cell; }
+                .distance-filter { margin-right:15px; display:inline-block; }
+                .checkbox { display:inline-block; }
+            }
+        }
+    }
+}

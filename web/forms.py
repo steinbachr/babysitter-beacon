@@ -5,6 +5,7 @@ from web.models import *
 import pdb
 
 
+#####-----< Generic Forms >-----#####
 class LoginForm(forms.Form):
     email = forms.CharField(required=True)
     password = forms.CharField(required=True, widget=forms.PasswordInput)
@@ -66,8 +67,6 @@ class PaymentForm(forms.Form):
 
 
 #####-----< Parent Forms >-----#####
-
-
 class ChildForm(forms.ModelForm):
     class Meta:
         model = Child
@@ -89,4 +88,11 @@ class BeaconForm(forms.ModelForm):
 class ParentLocationForm(forms.ModelForm):
     class Meta:
         model = Parent
+        fields = ['address', 'city', 'state', 'postal_code']
+
+
+#####-----< Sitter Forms >-----#####
+class SitterLocationForm(forms.ModelForm):
+    class Meta:
+        model = Sitter
         fields = ['address', 'city', 'state', 'postal_code']

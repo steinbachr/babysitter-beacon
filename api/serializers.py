@@ -31,6 +31,8 @@ class ParentSerializer(serializers.ModelSerializer):
 
 
 class SitterSerializer(serializers.ModelSerializer):
+    header_image = serializers.CharField(source='best_header_image', read_only=True)
+
     class Meta:
         model = Sitter
         exclude = ['is_approved', 'created_time']

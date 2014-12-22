@@ -138,6 +138,7 @@ PIPELINE_JS = {
             'files/js/app/parents/models/Beacon.js',
             'files/js/app/parents/models/Child.js',
             'files/js/app/parents/models/Parent.js',
+            'files/js/app/navbar.js',
             'files/js/app/parents/parents.js',
         ),
         'output_filename': 'build/parents.js'
@@ -145,6 +146,7 @@ PIPELINE_JS = {
     'sitters': {
         'source_filenames': (
             'files/js/app/sitters/models/Sitter.js',
+            'files/js/app/navbar.js',
             'files/js/app/sitters/sitters.js',
         ),
         'output_filename': 'build/sitters.js'

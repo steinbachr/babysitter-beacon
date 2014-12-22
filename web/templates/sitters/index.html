@@ -11,10 +11,84 @@
 
 {% block body %}
     <body>
-        <h1>{{ sitter.first_name }}'s Dashboard ({{ sitter.id }})</h1>
+        <div class="header-container">
+        <script type="text/plain" id="nav-template">
+            <div class="header" style="background-image:url(<%= header_image %>);">
+                <h1>Hi. Welcome <%= first_name %></h1>
+                <% if (profile_image) { %>
+                <img src="<%= profile_image %> class="img-thumbnail profile-image" />
+                <% } else { %>
+                <div class="img-thumbnail profile-image"><i class="fa fa-image"></i></div>
+                <% } %>
+            </div>
+
+            <div class="nav-bar">
+                <a href="#/jobs">Jobs</a>
+                <a href="#/upcoming">Upcoming</a>
+                <a href="#/account">Account</a>
+                <span class="selected-arrow"></span>
+            </div>
+        </script>
+        </div>
+
+        <div class="container">
+            <div class="jobs-container">
+                <div class="filters">
+                    <div class="form-group filter-group">
+                        <div class="filters-header">
+                            <h4>Distance</h4>
+                            <h4>Number of Children</h4>
+                        </div>
+                        <div class="filters-body">
+                            <div class="distance-filter">
+                                <select>
+                                    <option value="1">1</option>
+                                    <option value="1">5</option>
+                                    <option value="1">10</option>
+                                    <option value="1">50</option>
+                                    <option value="1">100</option>
+                                </select> mi.
+                            </div>
+                            <div class="children-filter">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" />1
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="2" />2
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="3" />3
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="4" />4
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="upcoming-container">
+
+            </div>
+            <div class="account-container">
+
+            </div>
+        </div>
     </body>
 {% endblock %}
 
 {% block js %}
     {% javascript 'sitters' %}
+    <script>
+    window.sitterModel = new SitterModel({id: {{sitter.id}}});
+    window.stripePublishableKey = "{{ stripe_publishable_key }}";
+    </script>
 {% endblock %}
