@@ -59,4 +59,4 @@ target/
 # Venv
 venv
 
-local_settings.py
+Babysitter/local_settings.py
