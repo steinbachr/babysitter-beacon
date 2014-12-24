@@ -1,7 +1,5 @@
 @import "core";
 
-@lightgray: #eee;
-
 .header-container {
     .header { background-size:cover; height:350px; text-align: center;
         h1 { color:white; margin:0; background:rgba(0, 0, 0, .3); padding:10px; text-align: center; }
@@ -28,6 +26,20 @@
                 .distance-filter { margin-right:15px; display:inline-block; }
                 .checkbox { display:inline-block; }
             }
+        }
+    }
+    .filter-results { list-style-type: none; width:60%; margin:auto; padding:10px 10px; border:solid 2px #999;
+        li.result { padding:10px 0px; border-bottom:solid 1px #ccc;
+            .left-info, .right-info { display:inline-block; vertical-align: bottom;}
+            .right-info ul { list-style-type:none;
+                li { float:left; padding:5px 15px 0px 5px;
+                    .child-image { width:50px; height:50px; padding-top:15px; text-align:center;
+                        i { font-size:15px; }
+                    }
+                }
+            }
+            .btn { float:right; }
+            &:last-child { border-bottom:none; }
         }
     }
 }

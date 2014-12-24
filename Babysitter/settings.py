@@ -19,12 +19,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'eczxxlstekd_61kvw@yic!o#s!)e2f*x$4z+mj(bz+6cy$dm^w'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = '/'
 LOGOUT_URL = '/accounts/logout/'
@@ -84,11 +82,11 @@ DATABASES = {
         'PORT': '5432',
     },
     'prod': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sitter_prod',
-        'USER': 'sitter_user',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'd8i9vq70pj5c52',
+        'USER': 'mrnqdsmygbbdbz',
+        'PASSWORD': 'Cuyxlr2W_GYHWpOLPm5zwatnLl',
+        'HOST': 'ec2-23-21-243-117.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -203,6 +201,8 @@ STATICFILES_FINDERS = (
     'pipeline.finders.PipelineFinder',
 )
 
+#####-----< Heroku >-----#####
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #####-----< Switches >-----#####
 if DEBUG:

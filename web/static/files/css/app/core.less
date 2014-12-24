@@ -2,6 +2,13 @@
 @primary: #219AB3;
 @dark: #000;
 @light: #fff;
+@lightgray: #eee;
 
 /*****----- Mixins -----*****/
 .triangle-up(@size) { width: 0; height: 0; border-left: @size solid transparent; border-right: @size solid transparent;	 border-bottom: @size solid #333; }
+
+/*****----- Global Styles -----*****/
+.child-image.no-image { padding-top:40px; background:@lightgray;
+    i { font-size:40px; }
+    span { font-size:10px; font-weight: lighter; }
+}

@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="../static/files/css/vendor/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="../static/files/css/vendor/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/less" href="../static/files/css/app/core.less" />
+	<link rel="stylesheet" type="text/less" href="../static/files/css/app/sitters.less" />
+	<script type="text/javascript" src="../static/files/js/vendor/jquery.js"></script>
+	<script type="text/javascript" src="../static/files/js/vendor/underscore-min.js"></script>
+	<script type="text/javascript" src="../static/files/js/vendor/backbone-min.js"></script>
+	<script type="text/javascript" src="../static/files/js/vendor/bootstrap.js"></script>
+	<script type="text/javascript" src="../static/files/js/vendor/less-1.6.0.min.js"></script>
+	<script type="text/javascript" src="../static/files/js/app/sitters/models/Sitter.js"></script>
+	<script type="text/javascript" src="../static/files/js/app/sitters/sitters.js"></script>
+</head>
+<body>
+   <div class="header-container">
+		<div class="header" style="background-image:url('../static/files/images/space.jpg');">
+			<h1>Hi. Welcome Bobby</h1>
+			<div class="img-thumbnail profile-image"><i class="fa fa-image"></i></div>
+		</div>
+
+		<div class="nav-bar">
+			<a href="#/jobs">Jobs</a>
+			<a href="#/upcoming">Upcoming</a>
+			<a href="#/account">Account</a>
+			<span class="selected-arrow"></span>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="jobs-container">
+			<div class="filters">
+				<div class="form-group filter-group">
+					<div class="filters-header">
+						<h4>Distance</h4>
+						<h4>Number of Children</h4>
+					</div>
+					<div class="filters-body">
+						<div class="distance-filter">
+							<select>
+								<option value="1">1</option>
+								<option value="1">5</option>
+								<option value="1">10</option>
+								<option value="1">50</option>
+								<option value="1">100</option>
+							</select> mi.
+						</div>
+						<div class="children-filter">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="1" />1
+								</label>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="2" />2
+								</label>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="3" />3
+								</label>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="4" />4
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<ul class="filter-results">
+				<li class="result">
+					<div class="left-info">
+						<strong>Bobby Steinbach</strong><br />
+						<span>122 White Mills Road</span>
+					</div>
+					<div class="right-info">
+						<ul>
+							<li>
+								<div class="img-circle child-image no-image">
+									<i class="fa fa-camera"></i>
+								</div>
+							</li>
+							<li>
+								<div class="img-circle child-image no-image">
+									<i class="fa fa-camera"></i>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<button class="btn btn-primary">Bid</button>
+				</li>
+				<li class="result">
+					<div class="left-info">
+						<strong>Bobby Steinbach</strong><br />
+						<span>122 White Mills Road</span>
+					</div>
+					<div class="right-info">
+						<ul>
+							<li>
+								<div class="img-circle child-image no-image">
+									<i class="fa fa-camera"></i>
+								</div>
+							</li>
+							<li>
+								<div class="img-circle child-image no-image">
+									<i class="fa fa-camera"></i>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<button class="btn btn-primary">Bid</button>
+				</li>
+			</ul>
+		</div>
+		<div class="upcoming-container">
+
+		</div>
+		<div class="account-container">
+
+		</div>
+	</div>
+</body>
+</html>
