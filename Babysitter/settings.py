@@ -220,3 +220,5 @@ if DEBUG:
 else:
     STRIPE_PRIVATE_KEY = 'sk_live_GhcAxZdDIMosAMzccKzKgXsL'
     STRIPE_PUBLIC_KEY = 'pk_live_JeQTc1rZjGqqnLtuqpgzqc3h'
+
+from local_settings import *
